@@ -1,1 +1,1 @@
-lintCode的题目解答
+lintCode题目解答
