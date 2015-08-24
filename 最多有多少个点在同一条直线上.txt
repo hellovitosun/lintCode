@@ -1,0 +1,113 @@
+﻿问题：
+给出二维平面上的n个点，求最多有多少点在同一条直线上。
+
+样例
+给出4个点：(1, 2), (3, 6), (0, 0), (1, 3)。
+
+一条直线上的点最多有3个。
+
+/**
+ * Definition for a point.
+
+ * class Point {
+ 
+ *     int x;
+
+ *     int y;
+
+ *     Point() { x = 0; y = 0; }
+
+ *     Point(int a, int b) { x = a; y = b; }
+
+ * }
+ 
+*/
+
+public class Solution {
+
+    /**
+
+     * @param points an array of point
+
+     * @return an integer
+
+     */
+
+    public int maxPoints(Point[] points) {
+
+        // Write your code here
+
+        if(points==null || points.length==0)
+
+            return 0;
+
+        int len=points.length;
+
+        int maxNum=1;
+
+        HashMap<Double,Integer> mp=new HashMap<Double,Integer>();
+ 
+        //用HashMap来存储斜率和该斜率的个数<key,value>
+
+	 //当直线垂直于x轴时，斜率用(double)Integer.MIN_VALUE表示
+        
+  for (int i=0;i<len;i++){
+
+            mp.clear();
+ 
+            mp.put((double)Integer.MIN_VALUE,1);
+//如果所有点都相同，则这些点所在直线的斜率均用Integer.MIN_VALUE表示
+            int dup=0;//计算相同点的个数
+
+            double key=0.0;//保存斜率
+
+            for(int j=i+1;j<len;j++){
+
+                if(points[j].x==points[i].x && points[j].y==points[i].y){
+
+                    dup++;
+
+                    continue;//不存入HashMap
+
+                }else if(points[j].x==points[i].x){
+
+                    key=(double)Integer.MIN_VALUE;//垂直于x轴
+
+                }else
+
+                    key=0.0+(double)(points[j].y-points[i].y)/(double)(points[j].x-points[i].x);
+
+                    //这么写是为了防止出现-0.0，如：0/-1=-0
+ 
+           
+     if(mp.containsKey(key)){
+
+                    mp.put(key,mp.get(key)+1);
+
+                }else{
+
+                    mp.put(key,2);
+
+                }
+
+            }
+
+            for (int temp:mp.values()){
+ 
+               if(dup+temp>maxNum){
+
+                    maxNum=dup+temp;
+
+                }
+
+            }
+
+ 
+          }
+
+        return maxNum;
+
+    }
+
+}
+
