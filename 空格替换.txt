@@ -1,0 +1,49 @@
+﻿设计一种方法，将一个字符串中的所有空格替换成 %20 。你可以假设该字符串有足够的空间来加入新的字符，且你得到的是“真实的”字符长度。
+样例
+对于字符串"Mr John Smith", 长度为 13
+
+替换空格之后的结果为"Mr%20John%20Smith"
+
+注意
+如果使用 Java 或 Python, 程序中请用字符数组表示字符串。
+
+挑战
+在原字符串(字符数组)中完成替换，不适用额外空间
+
+思路：在原字符串上替换且时间复杂度为O(n),设定两个计数器i，j，分别指向原字符串尾和转换后的字符串尾（原字符串长度加其空格数×2），从后向前扫描，
+若i处不为空格，则将i处的值赋予j；若为空格，则在j处填入%20，直到i==j。
+
+public class Solution {
+    /**
+     * @param string: An array of Char
+     * @param length: The true length of the string
+     * @return: The true length of new string
+     */
+    public int replaceBlank(char[] string, int length) {
+        // Write your code here
+        int count = 0;
+        for (int i = 0;i<length;i++){
+            if(string[i]==' '){
+                count++;
+            }
+                
+        }
+        int newLength=count*2+length;
+        
+        int i=0;
+        int j=0;
+        for(i=length,j=newLength;i!=j;){
+            
+            if(string[i]!=' '){
+                string[j--]=string[i--];
+            }else{
+                i--;
+                string[j--]='0';
+                string[j--]='2';
+                string[j--]='%';
+            }
+            
+        }
+        return newLength;    
+    }
+}
