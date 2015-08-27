@@ -1,0 +1,64 @@
+﻿请找出无向图中相连要素的个数。
+
+图中的每个节点包含其邻居的 1 个标签和 1 个列表。（一个无向图的相连节点（或节点）是一个子图，其中任意两个顶点通过路径相连，且不与超级图中的其它顶点相连。）
+
+样例
+给定图:
+
+A------B  C
+ \     |  | 
+  \    |  |
+   \   |  |
+    \  |  |
+      D   E
+返回 {A,B,D}, {C,E}。其中有 2 个相连的元素，即{A,B,D}, {C,E}
+
+思路：求无向图的极大连通子图个数，深度或广度优先遍历均可，这里使用了广度优先遍历
+/**
+ * Definition for Undirected graph.
+ * class UndirectedGraphNode {
+ *     int label;
+ *     ArrayList<UndirectedGraphNode> neighbors;
+ *     UndirectedGraphNode(int x) { label = x; neighbors = new ArrayList<UndirectedGraphNode>(); }
+ * };
+ */
+public class Solution {
+    /**
+     * @param nodes a array of Undirected graph node
+     * @return a connected set of a Undirected graph
+     */
+    public List<List<Integer>> connectedSet(ArrayList<UndirectedGraphNode> nodes) {
+        // Write your code here
+        Set<Integer> visited=new HashSet<Integer>();
+        Queue<UndirectedGraphNode> q=new LinkedList<UndirectedGraphNode>();
+        List<List<Integer>> resultList=new ArrayList<List<Integer>>();
+        
+        // q.add(nodes.get(0));
+        for(UndirectedGraphNode node:nodes){
+            List<Integer> connectedList=new ArrayList<Integer>();
+            if(!visited.contains(node.label)){
+                q.add(node);
+                visited.add(node.label);
+            
+                while(!q.isEmpty()){
+                    UndirectedGraphNode fron=q.poll();
+                    connectedList.add(fron.label);
+                    for(UndirectedGraphNode neighborNode:fron.neighbors){
+                        if(!visited.contains(neighborNode.label)){
+                            q.add(neighborNode);
+                            visited.add(neighborNode.label);
+                        }
+                    }
+                    
+                }
+            }
+            if(connectedList.size()!=0){
+                Collections.sort(connectedList);
+                resultList.add(connectedList);
+            }
+        }
+        return resultList;
+        
+    }
+}
+

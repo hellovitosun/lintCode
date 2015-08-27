@@ -1,0 +1,76 @@
+请找出有向图中弱相连节点的数量。图中的每个节点包含其邻居的 1 个标签和1 个列表。 （一个有向图中的相连节点指的是一个包含 2 个通过直接边沿路径相连的顶点的子图。）
+
+样例
+给定图:
+
+A----->B  C
+ \     |  | 
+  \    |  |
+   \   |  |
+    \  v  v
+     ->D  E <- F
+返回 {A,B,D}, {C,E,F}. 图中有 2 个相连要素，即{A,B,D} 和 {C,E,F} 。
+
+挑战
+将原素升序排列。
+
+思路：把单向箭头变成双向，相当于变成了无向图，然后深度优先遍历（没想到更好的方法）
+/**
+ * Definition for Directed graph.
+ * class DirectedGraphNode {
+ *     int label;
+ *     ArrayList<DirectedGraphNode> neighbors;
+ *     DirectedGraphNode(int x) { label = x; neighbors = new ArrayList<DirectedGraphNode>(); }
+ * };
+ */
+public class Solution {
+    /**
+     * @param nodes a array of Directed graph node
+     * @return a connected set of a directed graph
+     */
+    
+    
+    public Set<Integer>visited=new HashSet<Integer>();
+    
+    public List<List<Integer>> connectedSet2(ArrayList<DirectedGraphNode> nodes) {
+        // Write your code here
+        List<List<Integer>> nodeList=new ArrayList<List<Integer>>();
+        
+        //把单向箭头变成双向，相当于变成了无向图
+        for ( DirectedGraphNode node:nodes){
+            for(DirectedGraphNode connectedNode:node.neighbors){
+                if(connectedNode!=node)
+                    connectedNode.neighbors.add(node);
+            }
+        }
+        
+        for ( DirectedGraphNode node:nodes){
+            List<Integer> connectedList=new ArrayList<Integer>();
+            
+            if(!visited.contains(node.label)){    
+                connectedGraph(connectedList,node,visited);
+            }
+            if(connectedList.size()!=0){
+            
+                Collections.sort(connectedList);
+                nodeList.add(connectedList);
+            }
+            
+        }
+        return nodeList;
+    }
+    
+    public void connectedGraph(List<Integer> connectedList,DirectedGraphNode node, Set<Integer> visited){
+        
+        connectedList.add(node.label);
+        visited.add(node.label);
+        
+        for(DirectedGraphNode connectedNode:node.neighbors){
+                if(!visited.contains(connectedNode.label)){ 
+                    connectedGraph(connectedList,connectedNode,visited);
+                }
+                
+        }
+       
+    }
+}
