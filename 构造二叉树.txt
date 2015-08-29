@@ -1,0 +1,93 @@
+根据前序遍历和中序遍历树构造二叉树.
+
+您在真实的面试中是否遇到过这个题？ Yes
+样例
+给出中序遍历：[1,2,3]和前序遍历：[2,1,3]. 返回如下的树:
+
+  2
+ / \
+1   3
+注意
+你可以假设树中不存在相同数值的节点
+
+思路：
+前序序列：1    2    4    7    3    5    6    8
+        root   --左子树---   ------右子树-----
+中序序列：4   7   2     1    5    3    8    6
+          --左子树---  root  ------右子树-----
+前序序列中第一个元素为root，在中序序列中找到该元素，且该元素左边的为左子树，右边的为右子树，两棵子树元素个数分别为L和R，
+则在前序序列中root后L个元素必为其左子树的元素，再往后R个元素为其右子树的元素，按照此方法递归划分，直到前序序列和中序序列中均
+只剩下一个元素且相同时返回给元素。
+
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+ 
+ 
+public class Solution {
+    /**
+     *@param preorder : A list of integers that preorder traversal of a tree
+     *@param inorder : A list of integers that inorder traversal of a tree
+     *@return : Root of a tree
+     */
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        // write your code here
+        if(preorder.length == 0 || inorder.length == 0){
+            return null;
+        }
+        return build(preorder,inorder);
+        
+    }
+    public TreeNode build(int[] preorder, int[] inorder){
+        TreeNode root = new TreeNode(preorder[0]);
+        if(inorder.length == 1 && preorder[0]==inorder[0]){
+           
+            return new TreeNode(inorder[0]);
+        }
+        
+        
+        int rootInorder = 0;
+        while(rootInorder<preorder.length &&inorder[rootInorder] !=preorder[0] ){
+            rootInorder++;
+        }
+        int left = rootInorder;
+        
+        int[] lInorder = new int[left];
+        
+        int right = preorder.length - left - 1;
+        int[] rInorder = new int[right];
+        
+        int[] lPreorder = new int[left];
+        
+        int[] rPreorder = new int[right];
+        
+        for(int i = 0; i < left; i++ ){
+            lInorder[i] =  inorder[i];
+        }
+        for(int i = left+1; i < preorder.length; i++ ){
+            rInorder[i- left - 1] = inorder[i];
+        }
+        for(int i = 1; i < left+1; i++){
+            lPreorder[i-1]=preorder[i];
+        }
+        for(int i = left+1; i < left+right+1; i++){
+            rPreorder[i- left - 1]=preorder[i];
+        }
+        if(left>0)
+            root.left = buildTree(lPreorder,lInorder);
+        if(right>0)
+            root.right = buildTree(rPreorder,rInorder);
+        
+        return root;
+    }
+    
+}
+心得：解题时每次划分直接对数组进行了操作，该方法欠佳，可以只对下标进行操作
