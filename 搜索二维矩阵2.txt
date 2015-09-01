@@ -1,0 +1,66 @@
+写出一个高效的算法来搜索m×n矩阵中的值，返回这个值出现的次数。
+
+这个矩阵具有以下特性：
+
+每行中的整数从左到右是排序的。
+每一列的整数从上到下是排序的。
+在每一行或每一列中没有重复的整数。
+您在真实的面试中是否遇到过这个题？ Yes
+样例
+考虑下列矩阵：
+
+[
+
+    [1, 3, 5, 7],
+
+    [2, 4, 7, 8],
+
+    [3, 5, 9, 10]
+
+]
+
+给出target = 3，返回 2
+
+挑战
+要求O(m+n) 时间复杂度和O(1) 额外空间
+
+思路：从矩阵的右上角开始，如果目标元素小于该元素，则说明该列的所有元素均大于目标元素，剔除该列；如果目标元素大于该元素，则说明目标元素在该元素的右下方，因为右边
+的列已经剔除，所以目标元素在该元素所在行的下方，于是剔除该行，减小搜索范围，直到找到目标元素。找到后还需要继续搜索矩阵，因为每一行或列不存在相同的元素，所以该行
+或该列中不再存在目标元素，所以下一步从下一行或者下一列开始搜索，直到到达左下角。算法遍历m+n次，时间复杂度为O(m+n),空间复杂度为O(1)。
+此外，还可以从左下角开始搜索。
+
+
+public class Solution {
+    /**
+     * @param matrix: A list of lists of integers
+     * @param: A number you want to search in the matrix
+     * @return: An integer indicate the occurrence of target in the given matrix
+     */
+    public int searchMatrix(int[][] matrix, int target) {
+        // write your code here
+        int count = 0;
+        int rows = matrix.length;
+        if(rows>0){
+            int columns = matrix[0].length;
+            
+            if(rows>0 && columns>0){
+                int row = 0;
+                int column = columns - 1;
+                while(row<rows && column>=0){
+                    
+                    if(target == matrix[row][column]){
+                        count ++ ;
+                        column -- ;
+                    }else if(target < matrix[row][column]){
+                        column -- ;
+                    }else{
+                        row ++ ;
+                    }
+                    
+                }
+            }
+        }
+        return count;
+    }
+}
+
